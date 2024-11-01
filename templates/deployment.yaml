@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "llm-rag-chart.fullname" . }}-llm
+  labels:
+    app: {{ include "llm-rag-chart.name" . }}
+spec:
+  replicas: {{ .Values.llm.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "llm-rag-chart.name" . }}-llm
+  template:
+    metadata:
+      labels:
+        app: {{ include "llm-rag-chart.name" . }}-llm
+    spec:
+      containers:
+        - name: llm
+          image: {{ .Values.llm.image }}
+          ports:
+            - containerPort: {{ .Values.llm.port }}
+          env:
+            - name: VECTOR_DB_ENDPOINT
+              value: {{ .Values.llm.env.VECTOR_DB_ENDPOINT }}
+          resources:
+            limits:
+              cpu: {{ .Values.llm.resources.limits.cpu }}
+              memory: {{ .Values.llm.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.llm.resources.requests.cpu }}
+              memory: {{ .Values.llm.resources.requests.memory }}

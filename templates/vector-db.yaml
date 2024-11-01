@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "llm-rag-chart.fullname" . }}-vector-db
+  labels:
+    app: {{ include "llm-rag-chart.name" . }}-vector-db
+spec:
+  replicas: {{ .Values.vectorDb.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "llm-rag-chart.name" . }}-vector-db
+  template:
+    metadata:
+      labels:
+        app: {{ include "llm-rag-chart.name" . }}-vector-db
+    spec:
+      containers:
+        - name: vector-db
+          image: {{ .Values.vectorDb.image }}
+          ports:
+            - containerPort: {{ .Values.vectorDb.port }}
+          resources:
+            limits:
+              cpu: {{ .Values.vectorDb.resources.limits.cpu }}
+              memory: {{ .Values.vectorDb.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.vectorDb.resources.requests.cpu }}
+              memory: {{ .Values.vectorDb.resources.requests.memory }}
